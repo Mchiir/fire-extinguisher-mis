@@ -201,4 +201,4 @@ utils/          # ApiError, asyncHandler, logger
 
 ## License
 
-Educational / exam project.
+MIT
