@@ -80,8 +80,8 @@ export const getInspectionById = async (id, user) => {
   return inspection;
 };
 
-export const createInspection = async (data, user) => {
-  await verifyExtinguisherExists(data.extinguisherId);
+export const createInspection = async (data, user, authorization) => {
+  await verifyExtinguisherExists(data.extinguisherId, authorization);
 
   const requestedBy =
     user.role === ROLES.ADMIN && data.requestedBy ? data.requestedBy : user.id;
@@ -95,11 +95,11 @@ export const createInspection = async (data, user) => {
   });
 };
 
-export const updateInspection = async (id, data) => {
+export const updateInspection = async (id, data, authorization) => {
   const inspection = await findByIdOrThrow(id);
 
   if (data.extinguisherId && data.extinguisherId !== inspection.extinguisherId.toString()) {
-    await verifyExtinguisherExists(data.extinguisherId);
+    await verifyExtinguisherExists(data.extinguisherId, authorization);
     inspection.extinguisherId = data.extinguisherId;
   }
 
@@ -118,7 +118,7 @@ export const deleteInspection = async (id) => {
   return inspection;
 };
 
-export const assignInspector = async (id, inspectorId) => {
+export const assignInspector = async (id, inspectorId, authorization) => {
   const inspection = await findByIdOrThrow(id);
 
   if (inspection.status === INSPECTION_STATUS.COMPLETED) {
@@ -128,7 +128,7 @@ export const assignInspector = async (id, inspectorId) => {
     throw ApiError.badRequest(MESSAGES.INVALID_STATUS_TRANSITION);
   }
 
-  await verifyInspectorExists(inspectorId);
+  await verifyInspectorExists(inspectorId, authorization);
 
   inspection.inspectorId = inspectorId;
   inspection.status = INSPECTION_STATUS.SCHEDULED;

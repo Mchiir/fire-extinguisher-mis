@@ -21,7 +21,12 @@ export const getById = asyncHandler(async (req, res) => {
 });
 
 export const create = asyncHandler(async (req, res) => {
-  const inspection = await inspectionService.createInspection(req.body, req.user);
+  // console.log('Request to create inspection received:', req); // Debug log for access token
+  const inspection = await inspectionService.createInspection(
+    req.body, 
+    req.user, 
+    req.headers.authorization
+  );
   res.status(201).json({
     success: true,
     message: MESSAGES.CREATED,
@@ -30,7 +35,11 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const update = asyncHandler(async (req, res) => {
-  const inspection = await inspectionService.updateInspection(req.params.id, req.body);
+  const inspection = await inspectionService.updateInspection(
+    req.params.id, 
+    req.body, 
+    req.headers.authorization
+  );
   res.json({
     success: true,
     message: MESSAGES.UPDATED,
@@ -50,7 +59,8 @@ export const remove = asyncHandler(async (req, res) => {
 export const assign = asyncHandler(async (req, res) => {
   const inspection = await inspectionService.assignInspector(
     req.params.id,
-    req.body.inspectorId
+    req.body.inspectorId,
+    req.headers.authorization
   );
   res.json({
     success: true,

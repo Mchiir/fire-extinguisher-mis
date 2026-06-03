@@ -1,4 +1,5 @@
 import * as upstream from './upstreamClient.js';
+import { ROLES } from '../constants/roles.js';
 
 const EXTINGUISHER_STATUS = {
   ACTIVE: 'ACTIVE',
@@ -154,14 +155,20 @@ export const generateExpiryReport = async (type, token) => {
 /**
  * Admin dashboard aggregate metrics.
  */
-export const generateDashboardSummary = async (token) => {
-  const [extinguishers, inspectionStats, userCount] = await Promise.all([
+export const generateDashboardSummary = async (token, user) => {
+  const [extinguishers, inspectionStats] = await Promise.all([
     upstream.fetchAllExtinguishers(token),
     upstream.fetchInspectionStats(token),
-    upstream.fetchUserCount(token),
+    // upstream.fetchUserCount(token),
   ]);
 
   const byStatus = countByStatus(extinguishers);
+
+  let userCount = null;
+  // role-based access: only admins can see user count
+  if (user?.role === ROLES.ADMIN) {
+    userCount = await upstream.fetchUserCount(token);
+  }
 
   return {
     generatedAt: new Date().toISOString(),
@@ -173,7 +180,7 @@ export const generateDashboardSummary = async (token) => {
       inspectionDue: byStatus[EXTINGUISHER_STATUS.INSPECTION_DUE] || 0,
       retired: byStatus[EXTINGUISHER_STATUS.RETIRED] || 0,
     },
-    users: { total: userCount },
+    // users: { total: userCount },
     inspections: inspectionStats || {
       total: 0,
       byStatus: {
@@ -183,5 +190,8 @@ export const generateDashboardSummary = async (token) => {
         [INSPECTION_STATUS.CANCELLED]: 0,
       },
     },
+
+    // users only visible to admins
+    ...(user?.role === ROLES.ADMIN && { users: { total: userCount } }),
   };
 };

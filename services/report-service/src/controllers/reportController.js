@@ -3,6 +3,7 @@ import { MESSAGES } from '../constants/messages.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const inventoryReport = asyncHandler(async (req, res) => {
+  // console.log('Request to generate inventory report received:', req); // Debug log for access token
   const report = await reportService.generateInventoryReport(req.query.period, req.accessToken);
   res.json({ success: true, message: MESSAGES.INVENTORY_REPORT, data: report });
 });
@@ -27,6 +28,9 @@ export const expiryReport = asyncHandler(async (req, res) => {
 });
 
 export const dashboardSummary = asyncHandler(async (req, res) => {
-  const report = await reportService.generateDashboardSummary(req.accessToken);
+  const report = await reportService.generateDashboardSummary(
+    req.accessToken,
+    req.user
+  );
   res.json({ success: true, message: MESSAGES.DASHBOARD_REPORT, data: report });
 });
