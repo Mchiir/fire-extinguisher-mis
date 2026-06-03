@@ -1,0 +1,139 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: femis-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  auth-service:
+    build: ./services/auth-service
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://mongo:27017/auth_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret}
+      FRONTEND_URL: http://localhost:5173
+      COOKIE_SECURE: "false"
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3001"
+
+  user-service:
+    build: ./services/user-service
+    environment:
+      PORT: 3002
+      MONGODB_URI: mongodb://mongo:27017/auth_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - mongo
+    ports:
+      - "3002:3002"
+
+  extinguisher-service:
+    build: ./services/extinguisher-service
+    environment:
+      PORT: 3003
+      MONGODB_URI: mongodb://mongo:27017/extinguisher_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - mongo
+    ports:
+      - "3003:3003"
+
+  inspection-service:
+    build: ./services/inspection-service
+    environment:
+      PORT: 3004
+      MONGODB_URI: mongodb://mongo:27017/inspection_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      EXTINGUISHER_SERVICE_URL: http://extinguisher-service:3003
+      USER_SERVICE_URL: http://user-service:3002
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - mongo
+      - extinguisher-service
+      - user-service
+    ports:
+      - "3004:3004"
+
+  maintenance-service:
+    build: ./services/maintenance-service
+    environment:
+      PORT: 3005
+      MONGODB_URI: mongodb://mongo:27017/maintenance_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      INSPECTION_SERVICE_URL: http://inspection-service:3004
+      EXTINGUISHER_SERVICE_URL: http://extinguisher-service:3003
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - mongo
+      - inspection-service
+      - extinguisher-service
+    ports:
+      - "3005:3005"
+
+  notification-service:
+    build: ./services/notification-service
+    environment:
+      PORT: 3006
+      MONGODB_URI: mongodb://mongo:27017/notification_db
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      SERVICE_TOKEN: ${SERVICE_TOKEN:-dev-service-token}
+      EXTINGUISHER_SERVICE_URL: http://extinguisher-service:3003
+      USER_SERVICE_URL: http://user-service:3002
+      INSPECTION_SERVICE_URL: http://inspection-service:3004
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - mongo
+      - extinguisher-service
+      - user-service
+      - inspection-service
+    ports:
+      - "3006:3006"
+
+  report-service:
+    build: ./services/report-service
+    environment:
+      PORT: 3007
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret}
+      EXTINGUISHER_SERVICE_URL: http://extinguisher-service:3003
+      INSPECTION_SERVICE_URL: http://inspection-service:3004
+      MAINTENANCE_SERVICE_URL: http://maintenance-service:3005
+      USER_SERVICE_URL: http://user-service:3002
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - extinguisher-service
+      - inspection-service
+      - maintenance-service
+      - user-service
+    ports:
+      - "3007:3007"
+
+  frontend:
+    build: ./frontend
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "5173:5173"
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - user-service
+      - extinguisher-service
+      - inspection-service
+      - maintenance-service
+      - notification-service
+      - report-service
+      - frontend
+
+volumes:
+  mongo_data:

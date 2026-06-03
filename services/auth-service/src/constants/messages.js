@@ -1,0 +1,16 @@
+export const MESSAGES = {
+  REGISTER_SUCCESS: 'Registration successful',
+  LOGIN_SUCCESS: 'Login successful',
+  LOGOUT_SUCCESS: 'Logout successful',
+  REFRESH_SUCCESS: 'Token refreshed',
+  PROFILE_UPDATED: 'Profile updated successfully',
+  PASSWORD_CHANGED: 'Password changed successfully',
+  PASSWORD_RESET_SENT: 'If the email exists, a reset link has been sent',
+  PASSWORD_RESET_SUCCESS: 'Password reset successful',
+  UNAUTHORIZED: 'Unauthorized access',
+  FORBIDDEN: 'Forbidden',
+  NOT_FOUND: 'Resource not found',
+  INVALID_CREDENTIALS: 'Invalid email or password',
+  EMAIL_EXISTS: 'Email already registered',
+  INVALID_TOKEN: 'Invalid or expired token',
+};

@@ -1,0 +1,36 @@
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant GW as Nginx Gateway
+  participant INS as Inspection Service
+  participant EXT as Extinguisher Service
+  participant USR as User Service
+  participant ADM as Admin
+
+  U->>FE: Schedule inspection
+  FE->>GW: POST /api/inspections
+  GW->>INS: Create inspection PENDING
+  INS->>EXT: Verify extinguisher exists
+  EXT-->>INS: OK
+  INS-->>FE: Inspection created
+
+  ADM->>FE: Assign inspector
+  FE->>GW: PATCH /api/inspections/:id/assign
+  GW->>INS: Assign inspector
+  INS->>USR: Verify inspector role
+  USR-->>INS: exists
+  INS-->>FE: Status SCHEDULED
+
+  participant INSP as Inspector
+  INSP->>FE: Complete inspection
+  FE->>GW: PATCH /api/inspections/:id/complete
+  GW->>INS: Mark COMPLETED
+  INS-->>FE: Done
+
+  INSP->>FE: Log maintenance
+  FE->>GW: POST /api/maintenance
+  Note over GW: maintenance-service
+  GW->>INS: Validate inspection COMPLETED
+  INS-->>GW: OK
+  GW->>EXT: Update extinguisher status
+  EXT-->>FE: Maintenance recorded

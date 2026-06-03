@@ -1,0 +1,11 @@
+Table notifications {
+  _id objectid [pk]
+  userId objectid [not null]
+  extinguisherId objectid
+  title varchar [not null]
+  message text [not null]
+  status varchar [not null, note: 'PENDING | SENT | FAILED']
+  sentAt datetime
+  createdAt datetime
+  updatedAt datetime
+}

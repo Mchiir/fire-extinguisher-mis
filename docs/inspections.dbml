@@ -1,0 +1,11 @@
+Table inspections {
+  _id objectid [pk]
+  extinguisherId objectid [not null, note: 'ref extinguisher-service']
+  requestedBy objectid [not null, note: 'ref user']
+  inspectorId objectid [note: 'ref inspector user']
+  scheduledDate datetime [not null]
+  status varchar [not null, note: 'PENDING | SCHEDULED | COMPLETED | CANCELLED']
+  notes text
+  createdAt datetime
+  updatedAt datetime
+}

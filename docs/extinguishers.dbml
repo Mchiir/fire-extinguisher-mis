@@ -1,0 +1,12 @@
+Table fire_extinguishers {
+  _id objectid [pk]
+  serialNumber varchar [unique, not null]
+  location varchar [not null]
+  type varchar [not null]
+  size varchar [not null]
+  installationDate datetime [not null]
+  expiryDate datetime [not null]
+  status varchar [not null, note: 'ACTIVE | INSPECTION_DUE | UNDER_MAINTENANCE | EXPIRED | RETIRED']
+  createdAt datetime
+  updatedAt datetime
+}

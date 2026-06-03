@@ -1,0 +1,20 @@
+{
+  "name": "fire-extinguisher-mis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fire Extinguisher Management Information System",
+  "scripts": {
+    "dev:auth": "pnpm --filter auth-service dev",
+    "dev:user": "pnpm --filter user-service dev",
+    "dev:extinguisher": "pnpm --filter extinguisher-service dev",
+    "dev:inspection": "pnpm --filter inspection-service dev",
+    "dev:maintenance": "pnpm --filter maintenance-service dev",
+    "dev:notification": "pnpm --filter notification-service dev",
+    "dev:report": "pnpm --filter report-service dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "seed:admin": "pnpm --filter auth-service seed"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

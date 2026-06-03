@@ -1,0 +1,19 @@
+Table users {
+  _id objectid [pk]
+  firstName varchar [not null]
+  lastName varchar [not null]
+  email varchar [unique, not null]
+  password varchar [not null, note: 'bcrypt hashed']
+  role varchar [not null, note: 'ADMIN | INSPECTOR | USER']
+  tokenVersion int [default: 0]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table refresh_tokens {
+  _id objectid [pk]
+  userId objectid [ref: > users._id]
+  tokenHash varchar [not null]
+  expiresAt datetime
+  isRevoked boolean [default: false]
+}

@@ -1,0 +1,50 @@
+flowchart TB
+  subgraph client [Client Layer]
+    FE[React Frontend]
+  end
+
+  subgraph gateway [API Gateway]
+    NG[Nginx :8080]
+  end
+
+  subgraph services [Microservices]
+    AUTH[auth-service :3001]
+    USER[user-service :3002]
+    EXT[extinguisher-service :3003]
+    INS[inspection-service :3004]
+    MAINT[maintenance-service :3005]
+    NOTIF[notification-service :3006]
+    REP[report-service :3007]
+  end
+
+  subgraph data [Data Layer]
+    MONGO[(MongoDB)]
+  end
+
+  FE --> NG
+  NG --> AUTH
+  NG --> USER
+  NG --> EXT
+  NG --> INS
+  NG --> MAINT
+  NG --> NOTIF
+  NG --> REP
+
+  AUTH --> MONGO
+  USER --> MONGO
+  EXT --> MONGO
+  INS --> MONGO
+  MAINT --> MONGO
+  NOTIF --> MONGO
+
+  INS -->|REST validate| EXT
+  INS -->|REST validate| USER
+  MAINT -->|REST validate| INS
+  MAINT -->|REST update status| EXT
+  NOTIF -->|REST fetch| EXT
+  NOTIF -->|REST fetch| USER
+  NOTIF -->|REST fetch| INS
+  REP -->|REST aggregate| EXT
+  REP -->|REST aggregate| INS
+  REP -->|REST aggregate| MAINT
+  REP -->|REST aggregate| USER

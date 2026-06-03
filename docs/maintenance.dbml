@@ -1,0 +1,11 @@
+Table maintenance_records {
+  _id objectid [pk]
+  extinguisherId objectid [not null]
+  inspectionId objectid
+  inspectorId objectid [not null]
+  actionTaken varchar [not null]
+  conditionFound varchar [not null]
+  maintenanceDate datetime [not null]
+  createdAt datetime
+  updatedAt datetime
+}
