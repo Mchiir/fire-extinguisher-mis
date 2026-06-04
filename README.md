@@ -199,6 +199,22 @@ utils/          # ApiError, asyncHandler, logger
 - [docs/inspection-flow.mmd](docs/inspection-flow.mmd)
 - DBML schemas: `docs/*.dbml`
 
+## Database backing up
+
+```bash
+# dump
+docker compose exec -T mongo mongodump --archive > ./all_databases.dump
+
+# specific database
+docker compose exec -T mongo mongodump --db=extinguisher_db --archive > ./extinguisher_db.dump
+
+# import
+docker compose exec -i mongo mongorestore --archive < ./all_databases.dump
+
+# specific db
+docker compose exec -i mongo mongorestore --archive < ./extinguisher_db.dump
+```
+
 ## License
 
 MIT
