@@ -1,6 +1,6 @@
 # Fire Extinguisher Management Information System (MIS)
 
-A microservices-based web application for managing fire extinguishers, inspections, maintenance, notifications, and reports. Built with an exam-friendly **Route → Controller → Service → Model** architecture and synchronous REST communication only.
+A microservices-based web application for managing fire extinguishers, inspections, maintenance, notifications, and reports. Built with a good system flow **Route → Controller → Service → Model** architecture and synchronous REST communication.
 
 ## Project Overview
 
@@ -43,7 +43,7 @@ See [docs/system-architecture.mmd](docs/system-architecture.mmd) and [docs/inspe
 
 ## Tech Stack
 
-**Backend:** Node.js (ESM), Express, MongoDB, Mongoose, Joi, JWT, Swagger, Morgan, Winston, node-cron, pnpm
+**Backend:** Node.js (ESM), Express, MongoDB, Mongoose, Joi, JWT, Swagger, Morgan, Winston, node-cron, npm
 
 **Frontend:** React, Vite, React Router, TailwindCSS, Lucide, React Hot Toast, SweetAlert2, Fetch API
 
@@ -78,6 +78,7 @@ Use the **same** `JWT_ACCESS_SECRET` across all services.
 
 ```bash
 docker compose up --build
+# add -d for detached/daemon mode
 ```
 
 | URL | Description |
