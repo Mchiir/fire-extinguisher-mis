@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Flame } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.jsx';
 import FormInput from '../components/FormInput.jsx';
@@ -29,7 +30,10 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="mb-6 text-2xl font-bold">Create Account</h1>
+        <div className="mb-6 flex items-center justify-center gap-2 text-brand-700">
+          <Flame size={32} />
+          <h1 className="text-2xl font-bold">Fire Extinguisher MIS</h1>
+        </div>
         <form onSubmit={handleSubmit}>
           <FormInput label="First Name" name="firstName" value={form.firstName} onChange={handleChange} required />
           <FormInput label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} required />
