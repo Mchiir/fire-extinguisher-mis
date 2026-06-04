@@ -145,7 +145,14 @@ export const runWeeklySummaryJob = async () => {
 };
 
 export const startNotificationJobs = () => {
-  cron.schedule('0 8 * * *', runDailyNotificationJob, { timezone: 'UTC' });
-  cron.schedule('0 8 * * 1', runWeeklySummaryJob, { timezone: 'UTC' });
-  logger.info('Notification cron jobs scheduled (daily 08:00 UTC, weekly Monday 08:00 UTC)');
+  // cron.schedule('0 8 * * *', runDailyNotificationJob, { timezone: 'UTC' });
+  // cron.schedule('0 8 * * 1', runWeeklySummaryJob, { timezone: 'UTC' });
+  // logger.info('Notification cron jobs scheduled (daily 08:00 UTC, weekly Monday 08:00 UTC)');
+
+  // Runs every minute for testing purposes
+  cron.schedule('* * * * *', runDailyNotificationJob, { timezone: 'UTC' });
+
+  // Runs every minute for testing purposes
+  cron.schedule('* * * * *', runWeeklySummaryJob, { timezone: 'UTC' });
+  logger.info('Notification cron jobs scheduled for testing (every minute)');
 };
